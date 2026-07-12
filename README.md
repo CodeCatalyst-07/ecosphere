@@ -20,9 +20,9 @@ These are the demo account identities for the Atlas Industries Supabase project.
 
 | User | Role | Email | Password |
 | --- | --- | --- | --- |
-| Alex Rivera | ESG Director / Admin | `alex@atlas.example` | Set privately in Supabase Auth |
-| Maya Chen | Operations Manager | `maya@atlas.example` | Set privately in Supabase Auth |
-| Jordan Lee | Employee | `jordan@atlas.example` | Set privately in Supabase Auth |
+| Alex Rivera | ESG Director / Admin | `alex@atlas.example` | eco123@ |
+| Maya Chen | Operations Manager | `maya@atlas.example` | eco123@ |
+| Jordan Lee | Employee | `jordan@atlas.example` | eco123@ |
 
 ## Architecture
 
