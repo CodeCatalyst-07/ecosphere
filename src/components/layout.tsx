@@ -1,0 +1,13 @@
+import { BarChart3, ChevronDown, FileText, Gauge, Leaf, Menu, Settings, ShieldCheck, Sparkles, Trophy, X } from 'lucide-react';
+import { useState } from 'react';
+import type { DemoUser, NavItem, Route } from '../types';
+
+const navigation: NavItem[] = [
+  { id: 'dashboard', label: 'Command Center', icon: Gauge }, { id: 'environmental', label: 'Environmental', icon: Leaf }, { id: 'governance', label: 'Governance', icon: ShieldCheck },
+  { id: 'challenges', label: 'Challenges', icon: Trophy }, { id: 'reports', label: 'Reports', icon: FileText }, { id: 'settings', label: 'Settings', icon: Settings },
+];
+export function AppShell({ route, onNavigate, user, onSignOut, children }: { route: Route; onNavigate: (route: Route) => void; user: DemoUser; onSignOut: () => void; children: React.ReactNode }) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const visibleNavigation = navigation.filter((item) => user.role !== 'employee' || ['dashboard', 'challenges', 'settings'].includes(item.id));
+  return <div className="app-shell"><aside className={`sidebar ${mobileOpen ? 'open' : ''}`}><div className="brand"><span className="brand-mark"><Sparkles size={17} /></span><span>EcoSphere</span><button className="mobile-close" onClick={() => setMobileOpen(false)}><X size={18}/></button></div><div className="workspace"><span>WORKSPACE</span><button>Atlas Industries <ChevronDown size={14}/></button></div><nav>{visibleNavigation.map(({ id, label, icon: Icon }) => <button key={id} className={route === id ? 'active' : ''} onClick={() => { onNavigate(id); setMobileOpen(false); }}><Icon size={18}/><span>{label}</span></button>)}</nav><div className="sidebar-bottom"><div className="security"><ShieldCheck size={17}/><span><b>Enterprise-ready</b><small>Governed sustainability</small></span></div><button className="profile" onClick={onSignOut} title="Switch demo persona"><span className="avatar">{user.initials}</span><span><b>{user.name}</b><small>{user.title}</small></span><ChevronDown size={14}/></button></div></aside><div className="shell-main"><header className="topbar"><button className="menu-button" onClick={() => setMobileOpen(true)}><Menu size={20}/></button><div className="crumb"><span>Atlas Industries</span><span>/</span><strong>{navigation.find(n => n.id === route)?.label}</strong></div><div className="filters"><button className="filter"><BarChart3 size={15}/><span>{user.role === 'employee' ? 'My department' : 'All departments'}</span><ChevronDown size={14}/></button><button className="filter"><span className="calendar-dot"/>Jul 1 – Jul 31, 2026<ChevronDown size={14}/></button></div></header><main>{children}</main></div></div>;
+}
