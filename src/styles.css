@@ -10,6 +10,18 @@
 .loading-state{min-height:100vh;max-width:1060px;display:grid;align-content:center;padding:48px 32px}.loading-state>div{width:100%}.loading-title{width:min(390px,72%);height:36px;margin:0 0 28px}.loading-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.loading-cards .skeleton{height:116px}.loading-panel{height:230px;margin-top:14px}@media(max-width:700px){.loading-cards{grid-template-columns:1fr}.loading-cards .skeleton{height:82px}}
 .access-footer{justify-content:space-between}.access-footer>span{display:flex;align-items:center;gap:7px}.reset-demo{border:0;background:transparent;color:#39745a;font:700 11px Manrope;display:inline-flex;align-items:center;gap:5px;padding:5px;white-space:nowrap}.reset-demo:hover{color:#164b36;text-decoration:underline}
 
+/* Auth form: override the compact persona-card treatment for a clear, usable sign-in flow. */
+.persona-card:has(.sign-in-form){display:block;padding:28px;max-width:500px;transform:none!important}
+.sign-in-form{display:grid;gap:17px}
+.sign-in-form label{display:grid;gap:8px;color:#30453c;font-size:12px;font-weight:700}
+.sign-in-form input{width:100%;height:44px;border:1px solid #cedbd5;border-radius:8px;padding:0 13px;background:#fff;color:var(--ink);font:500 14px Manrope;outline:none;transition:border-color .16s,box-shadow .16s}
+.sign-in-form input::placeholder{color:#98a59f}
+.sign-in-form input:focus{border-color:#38af76;box-shadow:0 0 0 3px rgba(66,223,154,.18)}
+.sign-in-form .button{width:100%;min-height:44px;padding:11px 16px;border-radius:8px;font-size:13px}
+.sign-in-form .button:disabled{cursor:wait;opacity:.7}
+.sign-in-error{margin:0;color:#a1453e;font-size:11px;line-height:1.5;background:#ffefed;border:1px solid #f7d1cd;border-radius:7px;padding:9px 11px}
+@media(max-width:800px){.persona-card:has(.sign-in-form){max-width:none;padding:22px}.sign-in-form input,.sign-in-form .button{min-height:46px}}
+
 @media print {
   @page { margin: 14mm; }
   body { background: #fff; }
