@@ -1,3 +1,19 @@
-import { ArrowRight, Leaf, RotateCcw, ShieldCheck, UserRound } from 'lucide-react'; import type { DemoUser } from '../types'; import { Badge, Button, Card } from './ui';
-const roleCopy={admin:'Full organization visibility',manager:'Department-level decisions',employee:'Personal participation view'};
-export function DemoAccess({users,onSelect,onReset}:{users:DemoUser[];onSelect:(userId:string)=>void;onReset:()=>void}){return <main className="access-page"><section className="access-intro"><div className="access-brand"><span className="brand-mark"><Leaf size={17}/></span>EcoSphere</div><Badge tone="green">Phase 2 · Demo access</Badge><h1>One ESG story.<br/>Three ways to act.</h1><p>Select a seeded persona to explore the same trusted organization from the right level of responsibility.</p><div className="access-note"><ShieldCheck size={17}/><span><b>Demo-safe access</b><small>Local data only · restore the seed story anytime</small></span></div></section><section className="persona-panel"><p className="eyebrow">CHOOSE A PERSONA</p><h2>Enter Atlas Industries</h2><p className="persona-description">Each profile has role-aware access prepared for the workflows in the next phases.</p><div className="persona-list">{users.map((user)=><Card key={user.id} className="persona-card"><span className="persona-avatar">{user.initials}</span><div><div className="persona-top"><h3>{user.name}</h3><Badge tone={user.role==='admin'?'green':'neutral'}>{user.role}</Badge></div><p>{user.title}</p><small>{roleCopy[user.role]}</small></div><Button aria-label={`Enter as ${user.name}`} onClick={()=>onSelect(user.id)}><ArrowRight size={17}/></Button></Card>)}</div><div className="access-footer"><span><UserRound size={14}/>No password needed for this seeded demo environment.</span><button className="reset-demo" onClick={onReset}><RotateCcw size={13}/>Reset demo data</button></div></section></main>}
+import { Leaf, LockKeyhole, ShieldCheck } from 'lucide-react';
+import { useState } from 'react';
+import { Badge, Button, Card } from './ui';
+
+export function DemoAccess({ onSignIn, error }: { onSignIn: (email: string, password: string) => Promise<string | undefined>; error?: string }) {
+  const [email, setEmail] = useState('alex@atlas.example');
+  const [password, setPassword] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [message, setMessage] = useState<string>();
+
+  const submit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setSubmitting(true);
+    setMessage(await onSignIn(email, password));
+    setSubmitting(false);
+  };
+
+  return <main className="access-page"><section className="access-intro"><div className="access-brand"><span className="brand-mark"><Leaf size={17}/></span>EcoSphere</div><Badge tone="green">Secure workspace access</Badge><h1>One ESG story.<br/>Three ways to act.</h1><p>Sign in to view Atlas Industries from the right level of responsibility.</p><div className="access-note"><ShieldCheck size={17}/><span><b>Supabase protected</b><small>Authentication and data access are governed by Row Level Security.</small></span></div></section><section className="persona-panel"><p className="eyebrow">SIGN IN</p><h2>Enter Atlas Industries</h2><p className="persona-description">Use one of the configured demo accounts to access the workspace.</p><Card className="persona-card"><form onSubmit={submit} className="sign-in-form"><label>Email<input type="email" value={email} onChange={(event)=>setEmail(event.target.value)} required autoComplete="email"/></label><label>Password<input type="password" value={password} onChange={(event)=>setPassword(event.target.value)} required autoComplete="current-password"/></label>{(error || message) && <p className="sign-in-error">{error || message}</p>}<Button type="submit" disabled={submitting}>{submitting ? 'Signing in…' : <><LockKeyhole size={16}/>Sign in</>}</Button></form></Card><div className="access-footer"><span><LockKeyhole size={14}/>Email/password authentication is enabled for this demo.</span></div></section></main>;
+}

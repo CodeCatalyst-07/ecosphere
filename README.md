@@ -1,5 +1,15 @@
 # EcoSphere
 
+## Supabase setup (S0–S6)
+
+1. Copy `.env.example` to `.env.local`, then set the project's URL and **publishable** key.
+2. Apply the migrations in `supabase/migrations` in timestamp order.
+3. Create the Alex, Maya, and Jordan email/password Auth accounts (with email confirmation disabled for the demo), then insert their `profiles` rows using the matching `auth.users.id` values. The initial migration seeds the Atlas organization and shared reference data.
+4. Deploy `supabase/functions/calculate-carbon`, `supabase/functions/approve-participation`, and `supabase/functions/generate-insight`. They require the standard `SUPABASE_URL` and `SUPABASE_ANON_KEY` Edge Function secrets plus a custom `SERVICE_ROLE_KEY` secret; never expose the service-role key to Vite or Vercel.
+5. For AI insights, set `GEMINI_API_KEY` in Supabase Edge Function secrets (and optionally `GEMINI_MODEL`, which defaults to `gemini-2.5-flash`). The key is never sent to the browser.
+
+Environmental, governance, and challenge data now load from Supabase. Challenge submissions use RLS-protected direct writes; approvals use the `approve-participation` Edge Function to atomically award points and the 400-point Climate Champion badge. S6 adds optional 10 MB private evidence files (PDF/JPEG/PNG/WebP) and a Gemini insight function grounded in the server dashboard read model. The browser client accepts only the publishable key; the service-role and Gemini keys are confined to Edge Functions.
+
 EcoSphere is an ESG Management Platform that turns environmental operations, employee participation, and governance compliance into one actionable management experience.
 
 **Live demo:** [ecosphere-amber.vercel.app](https://ecosphere-amber.vercel.app/)
@@ -91,12 +101,12 @@ npm run preview
 
 - React + TypeScript
 - Vite
-- Local browser persistence for the hackathon demo
+- Supabase Auth, PostgreSQL, Row Level Security, and Edge Functions
 - Lucide icons
 - Responsive CSS dashboard design
 - Vercel deployment
 
-The application is organized around reusable UI primitives, feature pages, a local demo repository, seeded business data, and role-aware UI behavior.
+The application is organized around reusable UI primitives, feature pages, Supabase-backed workflows, seeded business data, and role-aware UI behavior. The Command Center and executive report share the `get_dashboard()` server-side read model, so ESG scores and decision metrics are calculated from persisted records rather than in the browser.
 
 ## Demo personas
 
@@ -108,16 +118,9 @@ The application is organized around reusable UI primitives, feature pages, a loc
 
 ## Important hackathon scope note
 
-This version is a polished frontend demonstration, optimized for an eight-hour hackathon. It uses seeded data and browser `localStorage` rather than production services.
+The local repository remains only as a migration fallback. Configured deployments use Supabase for authentication and persistent, organization-scoped data.
 
-Production evolution would add:
-
-- Secure authentication and server-enforced role-based access.
-- PostgreSQL-backed multi-tenant data storage.
-- REST APIs and backend domain services.
-- File storage for participation evidence.
-- Real notification delivery.
-- Model-backed AI recommendations with server-side credentials.
+Production evolution would add real notification delivery, malware scanning/retention rules for evidence, and AI evaluation/feedback controls.
 
 ## Deployment
 
