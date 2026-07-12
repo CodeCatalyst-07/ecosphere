@@ -1,51 +1,50 @@
-# EcoSphere demo runbook
+# EcoSphere — 3-minute presentation script
 
-## Before presenting
+## Before you begin
 
-1. Open the deployed app and choose **Alex Rivera — ESG Director**.
-2. Keep a second tab on **Reports** as the closing screen.
-3. If a rehearsal changed the data, sign out and select **Reset demo data** before signing in again.
+Open the deployed application in two browser tabs. Sign in to one as **Alex Rivera** and keep the other ready for **Jordan Lee**. Use the shared demo password configured privately in Supabase Auth.
 
-## Five-minute pitch
+## Script (about 2 minutes 45 seconds)
 
-**0:00 — The problem**
+### 0:00–0:25 — Problem and solution
 
-“ESG data is usually fragmented across operational systems, compliance trackers, and employee programmes. EcoSphere turns those disconnected signals into one accountable management view.”
+“ESG work is usually fragmented: operations teams track emissions separately, compliance teams manage risk elsewhere, and employee sustainability activity is often invisible. EcoSphere brings those signals into one accountable management platform. It gives leaders a trusted ESG position, clear owners, and actions they can take immediately.”
 
-**0:25 — Command Center**
+### 0:25–0:55 — Command Center and AI insight
 
-Show the ESG score, carbon footprint, active governance risk, and AI recommendations. Point out that every recommendation cites live structured metrics and opens the corresponding workflow.
+“This is the Command Center. The overall ESG score is calculated in Supabase from Environmental, Social, and Governance metrics—not in the browser. We can see the carbon footprint, active governance risks, and challenge participation in one place.”
 
-**0:55 — Measure carbon**
+“When I generate an AI insight, Gemini receives only trusted dashboard metrics. It returns a focused recommendation, saves its source metrics for traceability, and links us directly to the relevant workflow. This is grounded decision support, not a generic chatbot.”
 
-Open **Environmental**, then add an Operations activity. Show the emission factor, source, calculation preview, and the carbon ledger updating. Return to the dashboard to show the score and target variance refresh.
+### 0:55–1:25 — Environmental workflow
 
-**1:50 — Govern risk**
+“In Environmental, a manager records an operational activity using a verified emission factor. The `calculate-carbon` Edge Function validates the input and calculates official CO₂e server-side. That creates an auditable operational record and carbon-ledger transaction, then refreshes the dashboard and the target position.”
 
-Open **Governance**. Select the overdue fleet-evidence issue, identify the owner and due date, then update the issue status. Acknowledge the Responsible Operations Code to demonstrate policy tracking.
+### 1:25–1:50 — Governance workflow
 
-**2:40 — Engage employees**
+“Governance turns risk into accountability. Here we track policy acknowledgement alongside compliance issues with a severity, owner, and due date. The platform makes overdue high-severity issues visible before they become reporting problems.”
 
-Switch to **Jordan Lee — People Operations** and submit challenge evidence. Switch back to Alex or Maya, open **Challenges**, approve the evidence, and show EcoPoints and the recognition badge.
+### 1:50–2:25 — Employee challenge and evidence
 
-**3:35 — Act on insight**
+“Now I switch to Jordan, an employee. Jordan can submit progress for an active sustainability challenge, add an evidence summary, and optionally attach a private PDF or image. The evidence is stored in a private Supabase bucket with organization-scoped access controls.”
 
-Return to the dashboard. Use an Insight Engine recommendation to jump directly to the relevant carbon, governance, or challenge record. Emphasize that this is decision support grounded in EcoSphere data, not a generic chatbot.
+“Back as Alex or Maya, the submission appears in Manager Review. Approving it runs a protected Edge Function, which awards EcoPoints exactly once and unlocks the Climate Champion badge when the threshold is met.”
 
-**4:10 — Close with reporting**
+### 2:25–2:45 — Close
 
-Open **Reports**. Summarize the executive score, pillar highlights, Operations carbon target, governance exposure, and executive narrative. End on the action list: recover carbon performance, close evidence, and recognize verified participation.
+“Finally, Reports converts the same trusted dashboard data into a print-ready executive summary. EcoSphere connects measurement, governance, employee action, and explainable insight—so sustainability teams can move from scattered data to accountable action.”
 
-## Backup screens
+## Demo path
 
-Capture these three screens before submission:
+1. Alex: Command Center → generate AI insight.
+2. Alex or Maya: Environmental → record an activity.
+3. Alex or Maya: Governance → show the overdue issue.
+4. Jordan: Challenges → submit evidence for an active challenge.
+5. Alex or Maya: Challenges → approve the submission.
+6. Alex: Reports → close on the executive summary.
 
-1. Command Center with insights visible.
-2. Environmental carbon ledger and calculation trail.
-3. Executive ESG Summary Report.
+## Recovery notes
 
-## Presenter guardrails
-
-- Stay with the seeded July 2026 narrative: Operations is over target, fleet evidence is overdue, and Jordan’s challenge evidence awaits review.
-- Do not use the browser back button during the demo; use the left navigation.
-- Use **Reset demo data** between full rehearsals so every story beat is available.
+- If Jordan already has an approved participation, create another active challenge for the evidence-upload demonstration.
+- If the AI button reports configuration unavailable, confirm `GEMINI_API_KEY` is set in Supabase Edge Function secrets.
+- For the best presentation flow, keep the Command Center and Reports pages open in separate tabs.

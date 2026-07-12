@@ -1,144 +1,114 @@
 # EcoSphere
 
-## Supabase setup (S0–S6)
-
-1. Copy `.env.example` to `.env.local`, then set the project's URL and **publishable** key.
-2. Apply the migrations in `supabase/migrations` in timestamp order.
-3. Create the Alex, Maya, and Jordan email/password Auth accounts (with email confirmation disabled for the demo), then insert their `profiles` rows using the matching `auth.users.id` values. The initial migration seeds the Atlas organization and shared reference data.
-4. Deploy `supabase/functions/calculate-carbon`, `supabase/functions/approve-participation`, and `supabase/functions/generate-insight`. They require the standard `SUPABASE_URL` and `SUPABASE_ANON_KEY` Edge Function secrets plus a custom `SERVICE_ROLE_KEY` secret; never expose the service-role key to Vite or Vercel.
-5. For AI insights, set `GEMINI_API_KEY` in Supabase Edge Function secrets (and optionally `GEMINI_MODEL`, which defaults to `gemini-2.5-flash`). The key is never sent to the browser.
-
-Environmental, governance, and challenge data now load from Supabase. Challenge submissions use RLS-protected direct writes; approvals use the `approve-participation` Edge Function to atomically award points and the 400-point Climate Champion badge. S6 adds optional 10 MB private evidence files (PDF/JPEG/PNG/WebP) and a Gemini insight function grounded in the server dashboard read model. The browser client accepts only the publishable key; the service-role and Gemini keys are confined to Edge Functions.
-
-EcoSphere is an ESG Management Platform that turns environmental operations, employee participation, and governance compliance into one actionable management experience.
+EcoSphere is a full-stack ESG management platform for turning environmental operations, governance accountability, and employee participation into measurable action.
 
 **Live demo:** [ecosphere-amber.vercel.app](https://ecosphere-amber.vercel.app/)
 
-## Why EcoSphere
+## What it does
 
-ESG information is often fragmented across operational records, compliance trackers, and employee initiatives. EcoSphere connects those signals so organizations can:
+- Calculates auditable operational carbon emissions from verified emission factors.
+- Surfaces a trusted, server-calculated ESG score: Environmental 40%, Social 30%, Governance 30%.
+- Tracks policy acknowledgement, compliance ownership, due dates, and overdue risks.
+- Lets employees submit challenge progress and optional private evidence files.
+- Lets managers approve submissions atomically, award EcoPoints, and unlock badges.
+- Generates Gemini recommendations grounded only in the persisted dashboard metrics.
+- Produces a print-ready executive ESG summary.
 
-- Measure operational carbon emissions using transparent emission factors.
-- Monitor Environmental, Social, and Governance performance in one Command Center.
-- Assign ownership to compliance risks and track overdue issues.
-- Encourage sustainable employee action through challenges, EcoPoints, badges, and leaderboards.
-- Convert raw ESG signals into grounded, explainable recommendations.
+## Demo accounts
 
-## Core capabilities
+These are the demo account identities for the Atlas Industries Supabase project. Passwords are intentionally not committed to the public repository; set and share the demo password through a private channel only.
 
-### Command Center
+| User | Role | Email | Password |
+| --- | --- | --- | --- |
+| Alex Rivera | ESG Director / Admin | `alex@atlas.example` | Set privately in Supabase Auth |
+| Maya Chen | Operations Manager | `maya@atlas.example` | Set privately in Supabase Auth |
+| Jordan Lee | Employee | `jordan@atlas.example` | Set privately in Supabase Auth |
 
-- Weighted overall ESG score: Environmental 40%, Social 30%, Governance 30%.
-- Pillar scores, carbon footprint, active governance risks, and challenge participation.
-- Department carbon ranking, goal progress, and ESG action recommendations.
+## Architecture
 
-### Environmental management
+```text
+React + Vite frontend (Vercel)
+  └── Supabase JavaScript client
+       ├── Supabase Auth and Row Level Security
+       ├── Postgres data and dashboard RPC
+       ├── Private Storage evidence bucket
+       └── Edge Functions
+            ├── calculate-carbon
+            ├── approve-participation
+            └── generate-insight → Gemini API
+```
 
-- Record operational activity.
-- Select a verified emission factor.
-- Calculate auditable carbon emissions automatically.
-- Review the carbon ledger and Operations target variance.
+The browser uses only the Supabase URL and publishable key. Official carbon calculation, participation approval, Gemini access, and service-role access remain server-side.
 
-### Governance and compliance
+## Stack
 
-- Track policy acknowledgements.
-- Create, assign, and update compliance issues.
-- Highlight high-severity and overdue governance risks.
-
-### Employee engagement
-
-- Submit evidence for a sustainability challenge.
-- Approve verified participation.
-- Award EcoPoints and unlock badges.
-- View progress and a compact leaderboard.
-
-### Executive reporting
-
-- Generate an ESG Summary Report from current platform data.
-- Review Environmental, Social, and Governance highlights.
-- Print a clean executive report.
-
-## Insight Engine
-
-EcoSphere’s Insight Engine is decision support grounded in live EcoSphere metrics. It identifies priorities such as carbon-target variance, high-severity compliance exposure, and unverified employee participation, then links directly to the relevant workflow.
-
-It deliberately does not claim to be a general-purpose chatbot or alter official ESG calculations. Scores and carbon calculations remain transparent and deterministic.
-
-## Demo flow
-
-1. Sign in as **Alex Rivera — ESG Director**.
-2. Open the **Command Center** to review ESG health and recommendations.
-3. Add an operational activity in **Environmental** and inspect the carbon calculation trail.
-4. Open **Governance** to review the overdue fleet-evidence issue and policy acknowledgement status.
-5. Sign in as **Jordan Lee** to submit challenge evidence.
-6. Switch to Alex or Maya, approve the submission, and show EcoPoints and badge recognition.
-7. Close with the **ESG Summary Report**.
-
-Use **Reset demo data** on the persona screen before a fresh rehearsal.
+- React, TypeScript, Vite
+- Supabase Auth, PostgreSQL, Row Level Security, Storage, and Edge Functions
+- Gemini API for grounded ESG recommendations
+- Vercel for frontend deployment
 
 ## Local development
 
-### Prerequisites
-
-- Node.js 20 or later
-- npm
-
-### Run locally
+Prerequisites: Node.js 20+ and npm.
 
 ```bash
 npm install
+cp .env.example .env.local
 npm run dev
 ```
 
-### Production build
-
-```bash
-npm run build
-npm run preview
-```
-
-## Technical overview
-
-- React + TypeScript
-- Vite
-- Supabase Auth, PostgreSQL, Row Level Security, and Edge Functions
-- Lucide icons
-- Responsive CSS dashboard design
-- Vercel deployment
-
-The application is organized around reusable UI primitives, feature pages, Supabase-backed workflows, seeded business data, and role-aware UI behavior. The Command Center and executive report share the `get_dashboard()` server-side read model, so ESG scores and decision metrics are calculated from persisted records rather than in the browser.
-
-## Demo personas
-
-| Persona | Role | Primary use |
-| --- | --- | --- |
-| Alex Rivera | ESG Director / Admin | Organization-wide Command Center and management workflow |
-| Maya Chen | Operations Manager | Carbon and compliance ownership |
-| Jordan Lee | Employee | Challenge participation and evidence submission |
-
-## Important hackathon scope note
-
-The local repository remains only as a migration fallback. Configured deployments use Supabase for authentication and persistent, organization-scoped data.
-
-Production evolution would add real notification delivery, malware scanning/retention rules for evidence, and AI evaluation/feedback controls.
-
-## Deployment
-
-EcoSphere is deployed on Vercel. Vercel detects the Vite project and builds it with:
+Set these values in `.env.local`:
 
 ```text
-Build command: npm run build
-Output directory: dist
+VITE_SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=YOUR_SUPABASE_PUBLISHABLE_KEY
 ```
 
-## Repository quality checks
+Never put a service-role key or Gemini key in `.env.local` for the browser.
+
+## Supabase configuration
+
+The migrations in [`supabase/migrations`](supabase/migrations) define the schema, RLS policies, dashboard read model, challenge workflow, evidence metadata, and AI-insight storage. The Edge Functions live in [`supabase/functions`](supabase/functions).
+
+For the configured demo project, verify that the three Auth users above are email-confirmed and have matching `public.profiles` rows.
+
+Deploy the Edge Functions:
+
+```bash
+supabase functions deploy calculate-carbon
+supabase functions deploy approve-participation
+supabase functions deploy generate-insight
+```
+
+Set these Supabase Edge Function secrets:
+
+```bash
+supabase secrets set SERVICE_ROLE_KEY=YOUR_SUPABASE_SERVICE_ROLE_KEY
+supabase secrets set GEMINI_API_KEY=YOUR_GEMINI_API_KEY
+```
+
+`GEMINI_MODEL` is optional and defaults to `gemini-2.5-flash`.
+
+## Vercel deployment
+
+1. Import this GitHub repository into Vercel.
+2. Use build command `npm run build` and output directory `dist`.
+3. Add these Vercel environment variables:
+
+```text
+VITE_SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=YOUR_SUPABASE_PUBLISHABLE_KEY
+```
+
+4. In Supabase **Authentication → URL Configuration**, set the Vercel production URL as the Site URL and add it to Redirect URLs.
+5. Deploy and sign in with one of the demo accounts.
+
+## Quality check
 
 ```bash
 npm run build
 ```
 
-The build runs TypeScript compilation followed by a Vite production build.
+## Presentation guide
 
-## Team
-
-Built for an ESG Management Platform hackathon.
+See [DEMO.md](DEMO.md) for the under-three-minute demo script.
